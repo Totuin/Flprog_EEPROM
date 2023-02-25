@@ -125,17 +125,22 @@ protected:
     int16_t currentWriteByte = -1;
 };
 
-/*
 class FLProgEepromStringVariable : public FLProgEepromVariable
 {
 public:
-    String getValue() { return Sting(value); };
-    FLProgEepromStringVariable(char *valArray ='');
+    FLProgEepromStringVariable(uint16_t maxSize = 20, String startValue = "");
+    String getValue() { return String(value); };
+    void setValue(String newVal);
+    virtual uint8_t getWriteByte();
+    virtual void setByte(uint8_t index, uint8_t newValue);
+    virtual uint8_t dataSize() { return size; };
 
 protected:
-    char *value;
+    void privateSetValue(String newValue);
+    uint16_t size;
+    char *value = (char *)malloc(1);    
 };
-*/
+
 class FLProgEepromBaseDevice
 {
 public:

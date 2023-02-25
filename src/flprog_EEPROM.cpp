@@ -199,11 +199,13 @@ bool FLProgEepromBoolCollector::getIsNeededWrite()
 
 int16_t FLProgEepromBoolCollector::writeRegIndex()
 {
-    if (!(currentWriteByte < 0))
-    {
-        cilcuateWriteRegIndex();
-    }
+    // if (!(currentWriteByte < 0))
+    // {
+    cilcuateWriteRegIndex();
     return currentWriteByte;
+
+    //  }
+    // return currentWriteByte;
 }
 
 void FLProgEepromBoolCollector::cilcuateWriteRegIndex()
@@ -224,6 +226,7 @@ void FLProgEepromBoolCollector::cilcuateWriteRegIndex()
             byte++;
         }
     }
+    currentWriteByte = -1;
 }
 
 uint8_t FLProgEepromBoolCollector::getWriteByte()
@@ -266,14 +269,51 @@ void FLProgEepromBoolCollector::next()
         }
     }
 }
-//------------------------FLProgEepromBaseDevice--------------
+//--------------------------String---------------------------------
+FLProgEepromStringVariable::FLProgEepromStringVariable(uint16_t maxSize, String startValue)
+{
+    size = maxSize + 1;
+    free(value);
+    value = (char *)malloc(size);
+    privateSetValue(startValue);
+}
+
+void FLProgEepromStringVariable::privateSetValue(String newValue)
+{
+    newValue.toCharArray(value, size);
+}
+
+void FLProgEepromStringVariable::setValue(String newVal)
+{
+    if (newVal.equals(value))
+    {
+        return;
+    }
+    privateSetValue(newVal);
+    pointer = 0;
+    isNeededWrite = true;
+}
+
+uint8_t FLProgEepromStringVariable::getWriteByte()
+{
+    uint8_t temp = (uint8_t)value[pointer];
+    return temp;
+}
+
+void FLProgEepromStringVariable::setByte(uint8_t index, uint8_t newValue)
+{
+    char temp = (char)newValue;
+    value[index] = temp;
+}
+
+//------------------------FLProgEepromBaseDevice--------------------
 void FLProgEepromBaseDevice::setVars(FLProgEepromVariable *varsTable[], uint16_t tableSyze, uint8_t controlIndex)
 {
     vars = varsTable;
     varSize = tableSyze;
     uint16_t temp = 1, i;
     uint8_t index = readByte(0);
-    bool isNotFirstRun = controlIndex == index;
+    bool isfirstRun = controlIndex != index;
     if (codeError)
     {
         return;
@@ -281,10 +321,20 @@ void FLProgEepromBaseDevice::setVars(FLProgEepromVariable *varsTable[], uint16_t
     for (i = 0; i < tableSyze; i++)
     {
         vars[i]->setAddres(temp);
-        vars[i]->setIsNeedWrite(!isNotFirstRun);
+        vars[i]->setIsNeedWrite(isfirstRun);
         temp += vars[i]->dataSize();
     }
-    if (isNotFirstRun)
+    if (isfirstRun)
+    {
+        writeByte(0, controlIndex);
+        if (codeError)
+        {
+            return;
+        }
+        delay(FLPROG_EEPROM_I2C_AFTER_WRITE_DELAY);
+        emergencyRecording();
+    }
+    else
     {
         for (i = 0; i < tableSyze; i++)
         {
@@ -294,16 +344,6 @@ void FLProgEepromBaseDevice::setVars(FLProgEepromVariable *varsTable[], uint16_t
                 return;
             }
         }
-    }
-    else
-    {
-        writeByte(0, controlIndex);
-        if (codeError)
-        {
-            return;
-        }
-        delay(FLPROG_EEPROM_I2C_AFTER_WRITE_DELAY);
-        emergencyRecording();
     }
 }
 

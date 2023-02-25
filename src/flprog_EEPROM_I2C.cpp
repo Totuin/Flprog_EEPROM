@@ -11,10 +11,18 @@ void FLProgEepromI2C::pool()
     {
         if (step == FLPROG_EEPROM_I2C_NOT_READY_STEP)
         {
-            if (flprog::isTimer(startDelayTime, 10))
+            if (flprog::isTimer(startDelayTime, FLPROG_EEPROM_I2C_AFTER_WRITE_DELAY))
             {
                 step = FLPROG_EEPROM_I2C_READY_STEP;
             }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            writeNeededVars();
         }
     }
 }
@@ -32,6 +40,51 @@ void FLProgEepromI2C::initDevice()
     codeError = FLPROG_SENSOR_DEVICE_NOT_FOUND_ERROR;
     isInit = false;
     step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
+}
+
+uint8_t FLProgEepromI2C::privateWriteVar(FLProgEepromVariable *var)
+{
+    codeError = writeByte((var->getWriteAddress()), (var->getWriteByte()));
+    if (codeError)
+    {
+        isInit = false;
+        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
+        return;
+    }
+    var->next();
+}
+
+void FLProgEepromI2C::emergencyRecording()
+{
+    for (uint16_t i = 0; i < varSize; i++)
+    {
+
+        if (vars[i]->getIsNeededWrite())
+        {
+            codeError = privateWriteVar(vars[i]);
+
+            if (codeError)
+            {
+                return;
+            }
+            delay(FLPROG_EEPROM_I2C_AFTER_WRITE_DELAY);
+        }
+    }
+}
+
+void FLProgEepromI2C::writeNeededVars()
+{
+    FLProgEepromVariable *var = nextWriteVar();
+    if (var == 0)
+    {
+        return;
+    }
+    privateWriteVar(var);
+    if (codeError)
+    {
+        isInit = false;
+        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
+    }
 }
 
 // -- -- -- -- -- -- -- -- -FLProg24C2X-- -- -- -- -- -
@@ -73,34 +126,19 @@ uint8_t FLProg24C2X::readByte(uint16_t addr)
     return data[0];
 }
 
-uint8_t FLProg24C2X::readBytes(uint16_t addr, uint8_t *data, uint8_t size)
+uint8_t FLProg24C2X::writeByte(uint16_t addr, uint8_t data)
 {
-    if (!isInit)
-    {
-        initDevice();
-    }
+
+    i2cDevice->beginTransmission(addres);
+    i2cDevice->write(addr >> 8);
+    i2cDevice->write(addr & 0xFF);
+    i2cDevice->write(data);
+    codeError = i2cDevice->endTransmission();
     if (codeError)
     {
         isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-        return codeError;
     }
-    uint8_t addrData[2];
-    addrData[0] = addr >> 8;
-    addrData[1] = addr & 0xFF;
-    codeError = i2cDevice->fullWrite(addres, addrData, 2);
-    if (codeError)
-    {
-        isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-        return codeError;
-    }
-    codeError = i2cDevice->fullRead(addres, data, size);
-    if (codeError)
-    {
-        isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-    }
+    step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
     return codeError;
 }
 
@@ -109,35 +147,6 @@ FLProg24C0X::FLProg24C0X(FLProgI2C *device, uint8_t i2c_address)
 {
     i2cDevice = device;
     addres = i2c_address;
-}
-
-uint8_t FLProg24C0X::readBytes(uint16_t addr, uint8_t *data, uint8_t size)
-{
-    if (!isInit)
-    {
-        initDevice();
-    }
-    if (codeError)
-    {
-        isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-        return codeError;
-    }
-    uint8_t addrData[1];
-    codeError = i2cDevice->fullWrite(addres, (uint8_t)addr);
-    if (codeError)
-    {
-        isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-        return codeError;
-    }
-    codeError = i2cDevice->fullRead(addres, data, size);
-    if (codeError)
-    {
-        isInit = false;
-        step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
-    }
-    return codeError;
 }
 
 uint8_t FLProg24C0X::readByte(uint16_t addr)
@@ -160,4 +169,18 @@ uint8_t FLProg24C0X::readByte(uint16_t addr)
         step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
     }
     return result;
+}
+
+uint8_t FLProg24C0X::writeByte(uint16_t addr, uint8_t data)
+{
+    i2cDevice->beginTransmission(addres);
+    i2cDevice->write((uint8_t)addr);
+    i2cDevice->write(data);
+    codeError = i2cDevice->endTransmission();
+    if (codeError)
+    {
+        isInit = false;
+    }
+    step = FLPROG_EEPROM_I2C_NOT_READY_STEP;
+    return codeError;
 }

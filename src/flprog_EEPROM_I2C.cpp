@@ -52,14 +52,14 @@ uint8_t FLProgEepromI2C::privateWriteVar(FLProgEepromVariable *var)
         return;
     }
     var->next();
+    return codeError;
 }
 
 void FLProgEepromI2C::emergencyRecording()
 {
     for (uint16_t i = 0; i < varSize; i++)
     {
-
-        if (vars[i]->getIsNeededWrite())
+        while (vars[i]->getIsNeededWrite())
         {
             codeError = privateWriteVar(vars[i]);
 

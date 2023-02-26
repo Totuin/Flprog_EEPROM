@@ -296,14 +296,13 @@ void FLProgEepromStringVariable::setValue(String newVal)
 
 uint8_t FLProgEepromStringVariable::getWriteByte()
 {
-    uint8_t temp = (uint8_t)value[pointer];
-    return temp;
+
+    return (uint8_t)value[pointer];
 }
 
 void FLProgEepromStringVariable::setByte(uint8_t index, uint8_t newValue)
 {
-    char temp = (char)newValue;
-    value[index] = temp;
+    value[index] = (char)newValue;
 }
 
 //------------------------FLProgEepromBaseDevice--------------------

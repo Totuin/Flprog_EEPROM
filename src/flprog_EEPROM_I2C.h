@@ -1,7 +1,8 @@
 #pragma once
 #include "Arduino.h"
-// #include "flprogUtilites.h"
+#include "flprogUtilites.h"
 #include "flprog_EEPROM.h"
+#include "flprogI2C.h"
 
 #define FLPROG_EEPROM_I2C_READY_STEP 0
 #define FLPROG_EEPROM_I2C_NOT_READY_STEP 1

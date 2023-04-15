@@ -88,7 +88,7 @@ void FLProgEepromI2C::writeNeededVars()
 }
 
 // -- -- -- -- -- -- -- -- -FLProg24C2X-- -- -- -- -- -
-FLProg24C2X::FLProg24C2X(FLProgI2C *device, uint8_t i2c_address)
+FLProg24C2X::FLProg24C2X(AbstractFLProgI2C *device, uint8_t i2c_address)
 {
     i2cDevice = device;
     addres = i2c_address;
@@ -143,7 +143,7 @@ uint8_t FLProg24C2X::writeByte(uint16_t addr, uint8_t data)
 }
 
 // -- -- -- -- -- -- -- -- -FLProg24C0X-- -- -- -- -- -
-FLProg24C0X::FLProg24C0X(FLProgI2C *device, uint8_t i2c_address)
+FLProg24C0X::FLProg24C0X(AbstractFLProgI2C *device, uint8_t i2c_address)
 {
     i2cDevice = device;
     addres = i2c_address;

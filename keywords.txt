@@ -1,0 +1,48 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+#######################################
+# # Datatypes (KEYWORD1)
+#######################################
+FLProg24C0X	KEYWORD1
+FLProg24C2X	KEYWORD1
+FLProgEeprom4BytesVariable	KEYWORD1
+FLProgEepromBaseDevice	KEYWORD1
+FLProgEepromBoolCollector	KEYWORD1
+FLProgEepromBoolVariable	KEYWORD1
+FLProgEepromByteVariable	KEYWORD1
+FLProgEepromFloatVariable	KEYWORD1
+FLProgEepromI2C	KEYWORD1
+FLProgEepromIntVariable	KEYWORD1
+FLProgEepromLongVariable	KEYWORD1
+FLProgEepromStringVariable	KEYWORD1
+FLProgEepromUnLongVariable	KEYWORD1
+FLProgEepromVariable	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+dataSize	KEYWORD2
+emergencyRecording	KEYWORD2
+getAddres	KEYWORD2
+getBytes	KEYWORD2
+getIsNeededWrite	KEYWORD2
+getValue	KEYWORD2
+getWriteAddress	KEYWORD2
+getWriteByte	KEYWORD2
+isError	KEYWORD2
+next	KEYWORD2
+pool	KEYWORD2
+privateSetValue	KEYWORD2
+setAddres	KEYWORD2
+setByte	KEYWORD2
+setIsNeedWrite	KEYWORD2
+setValue	KEYWORD2
+setVars	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+FLPROG_EEPROM_I2C_AFTER_WRITE_DELAY	LITERAL1
+FLPROG_EEPROM_I2C_NOT_READY_STEP	LITERAL1
+FLPROG_EEPROM_I2C_READY_STEP	LITERAL1

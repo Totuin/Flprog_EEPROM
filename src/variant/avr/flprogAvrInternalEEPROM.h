@@ -7,7 +7,7 @@
 class FLProgInternalEEPROM : public FLProgAbstractEEPROM
 {
 public:
-    FLProgInternalEEPROM(uint16_t size, uint8_t initByte) : FLProgAbstractEEPROM(size, initByte){};
+    FLProgInternalEEPROM(uint16_t size, uint8_t initByte);
     virtual void begin();
     virtual void pool();
 };

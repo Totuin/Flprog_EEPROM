@@ -108,18 +108,9 @@ void FLProgAbstractEEPROM::saveLong(uint16_t startAddres, int32_t value, bool ne
     {
         return;
     }
-    uint8_t *x = (uint8_t *)&value;
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        if (_data[startAddres + i] != x[i])
-        {
-            _data[startAddres + i] = x[i];
-            if (needUpdate)
-            {
-                _dataChanged[startAddres + i] = true;
-            }
-        }
-    }
+    uint8_t sourse[4];
+    memcpy(sourse, &value, 4);
+    writeForByte(sourse, startAddres, needUpdate);
 }
 
 void FLProgAbstractEEPROM::saveUnsignedLong(uint16_t startAddres, uint32_t value, bool needUpdate)
@@ -128,18 +119,9 @@ void FLProgAbstractEEPROM::saveUnsignedLong(uint16_t startAddres, uint32_t value
     {
         return;
     }
-    uint8_t *x = (uint8_t *)&value;
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        if (_data[startAddres + i] != x[i])
-        {
-            _data[startAddres + i] = x[i];
-            if (needUpdate)
-            {
-                _dataChanged[startAddres + i] = true;
-            }
-        }
-    }
+    uint8_t sourse[4];
+    memcpy(sourse, &value, 4);
+    writeForByte(sourse, startAddres, needUpdate);
 }
 
 void FLProgAbstractEEPROM::saveString(uint16_t startAddres, uint16_t length, String value, bool needUpdate)
@@ -195,6 +177,29 @@ void FLProgAbstractEEPROM::saveByteArray(uint16_t startAddres, uint16_t length, 
     }
 }
 
+void FLProgAbstractEEPROM::readForByte(uint8_t *sourse, uint16_t startAddres)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        sourse[i] = _data[startAddres + i];
+    }
+}
+
+void FLProgAbstractEEPROM::writeForByte(uint8_t *sourse, uint16_t startAddres, bool needUpdate)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        if (_data[startAddres + i] != sourse[i])
+        {
+            _data[startAddres + i] = sourse[i];
+            if (needUpdate)
+            {
+                _dataChanged[startAddres + i] = true;
+            }
+        }
+    }
+}
+
 bool FLProgAbstractEEPROM::readBoolean(uint16_t startAddres, uint8_t bit)
 {
     if (!checkAddres(startAddres, startAddres))
@@ -232,13 +237,11 @@ int32_t FLProgAbstractEEPROM::readLong(uint16_t startAddres)
     {
         return 0;
     }
-    uint8_t x[4];
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        x[i] = _data[startAddres + i];
-    }
-    int32_t *y = (int32_t *)&x;
-    return y[0];
+    int32_t result;
+    uint8_t sourse[4];
+    readForByte(sourse, startAddres);
+    memcpy(&result, sourse, 4);
+    return result;
 }
 
 uint32_t FLProgAbstractEEPROM::readUnsignedLong(uint16_t startAddres)
@@ -247,13 +250,11 @@ uint32_t FLProgAbstractEEPROM::readUnsignedLong(uint16_t startAddres)
     {
         return 0;
     }
-    uint8_t x[4];
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        x[i] = _data[startAddres + i];
-    }
-    uint32_t *y = (uint32_t *)&x;
-    return y[0];
+    uint32_t result;
+    uint8_t sourse[4];
+    readForByte(sourse, startAddres);
+    memcpy(&result, sourse, 4);
+    return result;
 }
 
 String FLProgAbstractEEPROM::readString(uint16_t startAddres, uint16_t length)

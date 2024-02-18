@@ -7,11 +7,11 @@
 class FLProgInternalEEPROM : public FLProgAbstractEEPROM
 {
 public:
-    FLProgInternalEEPROM(uint16_t size, uint8_t initByte) : FLProgAbstractEEPROM(size, initByte){};
+    FLProgInternalEEPROM(uint16_t size, uint8_t initByte);
     virtual void begin();
     virtual void pool();
 
 protected:
-    virtual bool checkAddres(uint16_t addres);
+    virtual bool checkAddres(uint16_t addres, uint16_t endAddres);
 };
 #endif

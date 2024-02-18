@@ -2,7 +2,18 @@
 
 #ifdef FLPROG_STM32_EEPROM
 
-bool FLProgInternalEEPROM::checkAddres(uint16_t addres)
+FLProgInternalEEPROM::FLProgInternalEEPROM(uint16_t size, uint8_t initByte)
+{
+    _size = size;
+    if (_size > 0)
+    {
+        _data = new uint8_t[_size];
+        _data[0] = initByte;
+        _dataChanged = new bool[_size];
+    }
+}
+
+bool FLProgInternalEEPROM::checkAddres(uint16_t addres, uint16_t endAddres)
 {
     if (addres < 1)
     {
@@ -13,6 +24,18 @@ bool FLProgInternalEEPROM::checkAddres(uint16_t addres)
         return false;
     }
     if (addres >= _size)
+    {
+        return false;
+    }
+    if (endAddres < 1)
+    {
+        return false;
+    }
+    if (endAddres >= EEPROM.length())
+    {
+        return false;
+    }
+    if (endAddres >= _size)
     {
         return false;
     }

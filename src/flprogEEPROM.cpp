@@ -1,17 +1,6 @@
 #include "flprogEEPROM.h"
 
-FLProgAbstractEEPROM::FLProgAbstractEEPROM(uint16_t size, uint8_t initByte)
-{
-    this->_size = size;
-    if (_size > 0)
-    {
-        this->_data = new uint8_t[_size];
-        this->_data[0] = initByte;
-        this->_dataChanged = new bool[_size];
-    }
-}
-
-bool FLProgAbstractEEPROM::checkAddres(uint16_t addres)
+bool FLProgAbstractEEPROM::checkAddres(uint16_t addres, uint16_t endAddres)
 {
     if (addres < 1)
     {
@@ -21,6 +10,16 @@ bool FLProgAbstractEEPROM::checkAddres(uint16_t addres)
     {
         return false;
     }
+
+    if (endAddres < 1)
+    {
+        return false;
+    }
+    if (endAddres >= _size)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -32,7 +31,7 @@ uint16_t FLProgAbstractEEPROM::nextUpdateByteAddress()
     }
     for (uint16_t i = 1; i < _size; i++)
     {
-        if (_dataChanged)
+        if (_dataChanged[i])
         {
             return i;
         }
@@ -42,7 +41,11 @@ uint16_t FLProgAbstractEEPROM::nextUpdateByteAddress()
 
 void FLProgAbstractEEPROM::saveBoolean(uint16_t startAddres, uint8_t bit, bool value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, startAddres))
+    {
+        return;
+    }
+    if (bit > 7)
     {
         return;
     }
@@ -61,7 +64,7 @@ void FLProgAbstractEEPROM::saveBoolean(uint16_t startAddres, uint8_t bit, bool v
 
 void FLProgAbstractEEPROM::saveByte(uint16_t startAddres, uint8_t value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, startAddres))
     {
         return;
     }
@@ -77,7 +80,7 @@ void FLProgAbstractEEPROM::saveByte(uint16_t startAddres, uint8_t value, bool ne
 }
 void FLProgAbstractEEPROM::saveInteger(uint16_t startAddres, int16_t value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, (startAddres + 1)))
     {
         return;
     }
@@ -101,7 +104,7 @@ void FLProgAbstractEEPROM::saveInteger(uint16_t startAddres, int16_t value, bool
 
 void FLProgAbstractEEPROM::saveLong(uint16_t startAddres, int32_t value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, (startAddres + 4)))
     {
         return;
     }
@@ -121,7 +124,7 @@ void FLProgAbstractEEPROM::saveLong(uint16_t startAddres, int32_t value, bool ne
 
 void FLProgAbstractEEPROM::saveUnsignedLong(uint16_t startAddres, uint32_t value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, (startAddres + 4)))
     {
         return;
     }
@@ -141,7 +144,7 @@ void FLProgAbstractEEPROM::saveUnsignedLong(uint16_t startAddres, uint32_t value
 
 void FLProgAbstractEEPROM::saveString(uint16_t startAddres, uint16_t length, String value, bool needUpdate)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, (startAddres + length)))
     {
         return;
     }
@@ -172,18 +175,42 @@ void FLProgAbstractEEPROM::saveString(uint16_t startAddres, uint16_t length, Str
     }
 }
 
+void FLProgAbstractEEPROM::saveByteArray(uint16_t startAddres, uint16_t length, uint8_t *value, bool needUpdate)
+{
+
+    if (!checkAddres(startAddres, (startAddres + length)))
+    {
+        return;
+    }
+    for (uint16_t i = 0; i < length; i++)
+    {
+        if (_data[startAddres + i] != value[i])
+        {
+            _data[startAddres + i] = value[i];
+            if (needUpdate)
+            {
+                _dataChanged[startAddres + i] = true;
+            }
+        }
+    }
+}
+
 bool FLProgAbstractEEPROM::readBoolean(uint16_t startAddres, uint8_t bit)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, startAddres))
+    {
+        return false;
+    }
+    if (bit > 7)
     {
         return false;
     }
     return bitRead(_data[startAddres], bit);
 }
 
-uint8_t FLProgAbstractEEPROM::readByte(uint16_t startAddres, uint8_t value)
+uint8_t FLProgAbstractEEPROM::readByte(uint16_t startAddres)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, startAddres))
     {
         return 0;
     }
@@ -192,7 +219,7 @@ uint8_t FLProgAbstractEEPROM::readByte(uint16_t startAddres, uint8_t value)
 
 int16_t FLProgAbstractEEPROM::readInteger(uint16_t startAddres)
 {
-    if (!checkAddres(startAddres))
+    if (!checkAddres(startAddres, (startAddres + 1)))
     {
         return 0;
     }
@@ -201,29 +228,40 @@ int16_t FLProgAbstractEEPROM::readInteger(uint16_t startAddres)
 
 int32_t FLProgAbstractEEPROM::readLong(uint16_t startAddres)
 {
-
+    if (!checkAddres(startAddres, (startAddres + 4)))
+    {
+        return 0;
+    }
     uint8_t x[4];
     for (uint8_t i = 0; i < 4; i++)
     {
         x[i] = _data[startAddres + i];
     }
-    int32_t *y = (long *)&x;
+    int32_t *y = (int32_t *)&x;
     return y[0];
 }
 
 uint32_t FLProgAbstractEEPROM::readUnsignedLong(uint16_t startAddres)
 {
+    if (!checkAddres(startAddres, (startAddres + 4)))
+    {
+        return 0;
+    }
     uint8_t x[4];
     for (uint8_t i = 0; i < 4; i++)
     {
         x[i] = _data[startAddres + i];
     }
-    uint32_t *y = (unsigned long *)&x;
+    uint32_t *y = (uint32_t *)&x;
     return y[0];
 }
 
 String FLProgAbstractEEPROM::readString(uint16_t startAddres, uint16_t length)
 {
+    if (!checkAddres(startAddres, (startAddres + length)))
+    {
+        return "";
+    }
     String result = "";
     for (int i = 0; i < length; i++)
     {
@@ -234,4 +272,16 @@ String FLProgAbstractEEPROM::readString(uint16_t startAddres, uint16_t length)
         result.concat((char)_data[startAddres + i]);
     }
     return result;
+}
+
+void FLProgAbstractEEPROM::readByteArray(uint16_t startAddres, uint16_t length, uint8_t *value)
+{
+    if (!checkAddres(startAddres, (startAddres + length)))
+    {
+        return;
+    }
+    for (int i = 0; i < length; i++)
+    {
+        value[i] = _data[startAddres + i];
+    }
 }

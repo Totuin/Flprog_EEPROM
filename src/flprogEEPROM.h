@@ -38,8 +38,6 @@
 class FLProgAbstractEEPROM
 {
 public:
-    FLProgAbstractEEPROM(uint16_t size, uint8_t initByte);
-
     virtual void begin() = 0;
     virtual void pool() = 0;
 
@@ -48,6 +46,7 @@ public:
     void setIntegerStartValue(uint16_t startAddres, int16_t value) { saveInteger(startAddres, value, false); };
     void setLongStartValue(uint16_t startAddres, int32_t value) { saveLong(startAddres, value, false); };
     void setUnsignedLongStartValue(uint16_t startAddres, uint32_t value) { saveUnsignedLong(startAddres, value, false); };
+    void setByteArrayStartValue(uint16_t startAddres, uint16_t length, uint8_t *value) { saveByteArray(startAddres, length, value, false); };
     void setStringStartValue(uint16_t startAddres, uint16_t length, String value) { saveString(startAddres, length, value, false); };
 
     void saveBoolean(uint16_t startAddres, uint8_t bit, bool value, bool needUpdate = true);
@@ -56,16 +55,18 @@ public:
     void saveLong(uint16_t startAddres, int32_t value, bool needUpdate = true);
     void saveUnsignedLong(uint16_t startAddres, uint32_t value, bool needUpdate = true);
     void saveString(uint16_t startAddres, uint16_t length, String value, bool needUpdate = true);
+    void saveByteArray(uint16_t startAddres, uint16_t length, uint8_t *value, bool needUpdate = true);
 
     bool readBoolean(uint16_t startAddres, uint8_t bit);
-    uint8_t readByte(uint16_t startAddres, uint8_t value);
+    uint8_t readByte(uint16_t startAddres);
     int16_t readInteger(uint16_t startAddres);
     int32_t readLong(uint16_t startAddres);
     uint32_t readUnsignedLong(uint16_t startAddres);
     String readString(uint16_t startAddres, uint16_t length);
+    void readByteArray(uint16_t startAddres, uint16_t length, uint8_t *value);
 
 protected:
-    virtual bool checkAddres(uint16_t addres);
+    virtual bool checkAddres(uint16_t addres, uint16_t endAddres);
     uint16_t nextUpdateByteAddress();
     uint16_t _size = 0;
     uint8_t *_data = 0;

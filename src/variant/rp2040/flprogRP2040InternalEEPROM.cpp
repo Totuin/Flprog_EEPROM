@@ -1,6 +1,17 @@
 #include "flprogRP2040InternalEEPROM.h"
 
 #ifdef FLPROG_RP2040_EEPROM
+FLProgInternalEEPROM::FLProgInternalEEPROM(uint16_t size, uint8_t initByte)
+{
+    _size = size;
+    if (_size > 0)
+    {
+        _data = new uint8_t[_size];
+        _data[0] = initByte;
+        _dataChanged = new bool[_size];
+    }
+}
+
 void FLProgInternalEEPROM::begin()
 {
     if (_size == 0)
@@ -23,6 +34,7 @@ void FLProgInternalEEPROM::begin()
             EEPROM.write(i, _data[i]);
             _dataChanged[i] = false;
         }
+        EEPROM.commit();
     }
 }
 

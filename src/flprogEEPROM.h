@@ -69,8 +69,6 @@ public:
     void readByteArray(uint16_t startAddres, uint16_t length, uint8_t *value);
 
 protected:
-    void readForByte(uint8_t *sourse, uint16_t startAddres);
-    void writeForByte(uint8_t *sourse, uint16_t startAddres, bool needUpdate);
     virtual bool checkAddres(uint16_t addres, uint16_t endAddres);
     uint16_t nextUpdateByteAddress();
     uint16_t _size = 0;

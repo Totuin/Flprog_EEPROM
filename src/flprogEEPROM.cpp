@@ -113,6 +113,17 @@ void FLProgAbstractEEPROM::saveLong(uint16_t startAddres, int32_t value, bool ne
     writeForByte(sourse, startAddres, needUpdate);
 }
 
+void FLProgAbstractEEPROM::saveFloat(uint16_t startAddres, float value, bool needUpdate)
+{
+    if (!checkAddres(startAddres, (startAddres + 4)))
+    {
+        return;
+    }
+    uint8_t sourse[4];
+    memcpy(sourse, &value, 4);
+    writeForByte(sourse, startAddres, needUpdate);
+}
+
 void FLProgAbstractEEPROM::saveUnsignedLong(uint16_t startAddres, uint32_t value, bool needUpdate)
 {
     if (!checkAddres(startAddres, (startAddres + 4)))
@@ -238,6 +249,19 @@ int32_t FLProgAbstractEEPROM::readLong(uint16_t startAddres)
         return 0;
     }
     int32_t result;
+    uint8_t sourse[4];
+    readForByte(sourse, startAddres);
+    memcpy(&result, sourse, 4);
+    return result;
+}
+
+float FLProgAbstractEEPROM::readFloat(uint16_t startAddres)
+{
+    if (!checkAddres(startAddres, (startAddres + 4)))
+    {
+        return 0;
+    }
+    float result;
     uint8_t sourse[4];
     readForByte(sourse, startAddres);
     memcpy(&result, sourse, 4);

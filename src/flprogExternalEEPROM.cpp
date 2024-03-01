@@ -38,6 +38,13 @@ void FLProgExternalEEPROM::begin()
 
 void FLProgExternalEEPROM::pool()
 {
+    if (_eventsCount < _skippingEvents)
+    {
+        _eventsCount++;
+        return;
+    }
+    _eventsCount = 0;
+
     if (!(flprog::isTimer(_writeTime, 10)))
     {
         return;

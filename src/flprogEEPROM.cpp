@@ -1,5 +1,4 @@
 #include "flprogEEPROM.h"
-
 bool FLProgAbstractEEPROM::checkAddres(uint16_t addres, uint16_t endAddres)
 {
     if (addres < 1)

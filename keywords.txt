@@ -13,6 +13,7 @@ FLProgInternalEEPROM	KEYWORD1
 #######################################
 begin	KEYWORD2
 device	KEYWORD2
+getSkippingEvents	KEYWORD2
 pool	KEYWORD2
 readBoolean	KEYWORD2
 readByte	KEYWORD2
@@ -36,6 +37,7 @@ setByteStartValue	KEYWORD2
 setFloatStartValue	KEYWORD2
 setIntegerStartValue	KEYWORD2
 setLongStartValue	KEYWORD2
+setSkippingEvents	KEYWORD2
 setStringStartValue	KEYWORD2
 setUnsignedLongStartValue	KEYWORD2
 

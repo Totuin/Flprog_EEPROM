@@ -40,6 +40,12 @@ void FLProgInternalEEPROM::begin()
 
 void FLProgInternalEEPROM::pool()
 {
+    if (_eventsCount < _skippingEvents)
+    {
+        _eventsCount++;
+        return;
+    }
+    _eventsCount = 0;
     uint16_t temp = nextUpdateByteAddress();
     if (temp != _size)
     {

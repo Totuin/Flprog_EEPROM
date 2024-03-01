@@ -68,10 +68,16 @@ public:
     String readString(uint16_t startAddres, uint16_t length);
     void readByteArray(uint16_t startAddres, uint16_t length, uint8_t *value);
 
+    uint16_t getSkippingEvents() { return _skippingEvents; };
+    void setSkippingEvents(uint16_t value) { _skippingEvents = value; };
+
 protected:
     virtual bool checkAddres(uint16_t addres, uint16_t endAddres);
     uint16_t nextUpdateByteAddress();
     uint16_t _size = 0;
     uint8_t *_data = 0;
     bool *_dataChanged = 0;
+
+    uint16_t _skippingEvents = 0;
+    uint16_t _eventsCount = 0;
 };

@@ -48,6 +48,8 @@ public:
     void setFloatStartValue(uint16_t startAddres, float value) { saveFloat(startAddres, value, false); };
     void setUnsignedLongStartValue(uint16_t startAddres, uint32_t value) { saveUnsignedLong(startAddres, value, false); };
     void setByteArrayStartValue(uint16_t startAddres, uint16_t length, uint8_t *value) { saveByteArray(startAddres, length, value, false); };
+    void setUint16ArrayStartValue(uint16_t startAddres, uint16_t length, uint16_t *value) { saveUint16Array(startAddres, length, value, false); };
+    void setUint32ArrayStartValue(uint16_t startAddres, uint32_t length, uint16_t *value) { saveUint32Array(startAddres, length, value, false); };
     void setStringStartValue(uint16_t startAddres, uint16_t length, String value) { saveString(startAddres, length, value, false); };
 
     void saveBoolean(uint16_t startAddres, uint8_t bit, bool value, bool needUpdate = true);
@@ -58,6 +60,8 @@ public:
     void saveFloat(uint16_t startAddres, float value, bool needUpdate = true);
     void saveString(uint16_t startAddres, uint16_t length, String value, bool needUpdate = true);
     void saveByteArray(uint16_t startAddres, uint16_t length, uint8_t *value, bool needUpdate = true);
+    void saveUint16Array(uint16_t startAddres, uint16_t length, uint16_t *value, bool needUpdate = true);
+    void saveUint32Array(uint16_t startAddres, uint16_t length, uint32_t *value, bool needUpdate = true);
 
     bool readBoolean(uint16_t startAddres, uint8_t bit);
     uint8_t readByte(uint16_t startAddres);
@@ -67,6 +71,8 @@ public:
     uint32_t readUnsignedLong(uint16_t startAddres);
     String readString(uint16_t startAddres, uint16_t length);
     void readByteArray(uint16_t startAddres, uint16_t length, uint8_t *value);
+    void readUint16Array(uint16_t startAddres, uint16_t length, uint16_t *value);
+    void readUint32Array(uint16_t startAddres, uint16_t length, uint32_t *value);
 
     uint16_t getSkippingEvents() { return _skippingEvents; };
     void setSkippingEvents(uint16_t value) { _skippingEvents = value; };

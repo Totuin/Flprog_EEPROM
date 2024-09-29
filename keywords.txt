@@ -22,6 +22,8 @@ readFloat	KEYWORD2
 readInteger	KEYWORD2
 readLong	KEYWORD2
 readString	KEYWORD2
+readUint16Array	KEYWORD2
+readUint32Array	KEYWORD2
 readUnsignedLong	KEYWORD2
 saveBoolean	KEYWORD2
 saveByte	KEYWORD2
@@ -30,6 +32,8 @@ saveFloat	KEYWORD2
 saveInteger	KEYWORD2
 saveLong	KEYWORD2
 saveString	KEYWORD2
+saveUint16Array	KEYWORD2
+saveUint32Array	KEYWORD2
 saveUnsignedLong	KEYWORD2
 setBooleanStartValue	KEYWORD2
 setByteArrayStartValue	KEYWORD2
@@ -39,6 +43,8 @@ setIntegerStartValue	KEYWORD2
 setLongStartValue	KEYWORD2
 setSkippingEvents	KEYWORD2
 setStringStartValue	KEYWORD2
+setUint16ArrayStartValue	KEYWORD2
+setUint32ArrayStartValue	KEYWORD2
 setUnsignedLongStartValue	KEYWORD2
 
 #######################################

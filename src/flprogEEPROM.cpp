@@ -175,6 +175,42 @@ void FLProgAbstractEEPROM::saveByteArray(uint16_t startAddres, uint16_t length, 
     }
 }
 
+void FLProgAbstractEEPROM::saveUint16Array(uint16_t startAddres, uint16_t length, uint16_t *value, bool needUpdate)
+{
+    if (!checkAddres(startAddres, (startAddres + (length * 2))))
+    {
+        return;
+    }
+    uint16_t dataAddres = startAddres;
+    uint16_t valTemp;
+    uint8_t sourse[2];
+    for (uint16_t i = 0; i < length; i++)
+    {
+        valTemp = value[i];
+        memcpy(sourse, &valTemp, 2);
+        saveByteArray(dataAddres, 2, sourse, needUpdate);
+        dataAddres = dataAddres + 2;
+    }
+}
+
+void FLProgAbstractEEPROM::saveUint32Array(uint16_t startAddres, uint16_t length, uint32_t *value, bool needUpdate)
+{
+    if (!checkAddres(startAddres, (startAddres + (length * 4))))
+    {
+        return;
+    }
+    uint8_t sourse[4];
+    uint16_t dataAddres = startAddres;
+    uint32_t valTemp;
+    for (uint16_t i = 0; i < length; i++)
+    {
+        valTemp = value[i];
+        memcpy(sourse, &valTemp, 4);
+        saveByteArray(dataAddres, 4, sourse, needUpdate);
+        dataAddres = dataAddres + 4;
+    }
+}
+
 bool FLProgAbstractEEPROM::readBoolean(uint16_t startAddres, uint8_t bit)
 {
     if (!checkAddres(startAddres, startAddres))
@@ -261,5 +297,41 @@ void FLProgAbstractEEPROM::readByteArray(uint16_t startAddres, uint16_t length, 
     for (int i = 0; i < length; i++)
     {
         value[i] = _data[startAddres + i];
+    }
+}
+
+void FLProgAbstractEEPROM::readUint16Array(uint16_t startAddres, uint16_t length, uint16_t *value)
+{
+    if (!checkAddres(startAddres, (startAddres + (length * 2))))
+    {
+        return;
+    }
+    uint16_t dataAddres = startAddres;
+    uint8_t sourse[2] = {0, 0};
+    uint16_t result;
+    for (uint16_t i = 0; i < length; i++)
+    {
+        readByteArray(dataAddres, 2, sourse);
+        memcpy(&result, sourse, 2);
+        value[i] = result;
+        dataAddres = dataAddres + 2;
+    }
+}
+
+void FLProgAbstractEEPROM::readUint32Array(uint16_t startAddres, uint16_t length, uint32_t *value)
+{
+    if (!checkAddres(startAddres, (startAddres + (length * 4))))
+    {
+        return;
+    }
+    uint16_t dataAddres = startAddres;
+    uint8_t sourse[4] = {0, 0, 0, 0};
+    uint32_t result;
+    for (uint16_t i = 0; i < length; i++)
+    {
+        readByteArray(dataAddres, 4, sourse);
+        memcpy(&result, sourse, 4);
+        value[i] = result;
+        dataAddres = dataAddres + 4;
     }
 }

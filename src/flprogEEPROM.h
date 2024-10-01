@@ -49,7 +49,7 @@ public:
     void setUnsignedLongStartValue(uint16_t startAddres, uint32_t value) { saveUnsignedLong(startAddres, value, false); };
     void setByteArrayStartValue(uint16_t startAddres, uint16_t length, uint8_t *value) { saveByteArray(startAddres, length, value, false); };
     void setUint16ArrayStartValue(uint16_t startAddres, uint16_t length, uint16_t *value) { saveUint16Array(startAddres, length, value, false); };
-    void setUint32ArrayStartValue(uint16_t startAddres, uint32_t length, uint16_t *value) { saveUint32Array(startAddres, length, value, false); };
+    void setUint32ArrayStartValue(uint16_t startAddres, uint16_t length, uint32_t *value) { saveUint32Array(startAddres, length, value, false); };
     void setStringStartValue(uint16_t startAddres, uint16_t length, String value) { saveString(startAddres, length, value, false); };
 
     void saveBoolean(uint16_t startAddres, uint8_t bit, bool value, bool needUpdate = true);

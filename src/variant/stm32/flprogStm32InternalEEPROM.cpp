@@ -58,10 +58,11 @@ void FLProgInternalEEPROM::begin()
     }
     else
     {
+        EEPROM.write(0, _data[0]);
         for (uint16_t i = 0; i < _size; i++)
         {
-            EEPROM.write(i, _data[i]);
-            _dataChanged[i] = false;
+           // EEPROM.write(i, _data[i]);
+            _dataChanged[i] = true;
         }
     }
 }

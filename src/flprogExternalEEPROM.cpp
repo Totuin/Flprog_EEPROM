@@ -26,10 +26,11 @@ void FLProgExternalEEPROM::begin()
     }
     else
     {
+        universalWriteByte(0, _data[0]);
         for (uint16_t i = 0; i < _size; i++)
         {
-            universalWriteByte(i, _data[i]);
-            delay(10);
+            // universalWriteByte(i, _data[i]);
+            // delay(10);
             _dataChanged[i] = false;
         }
     }

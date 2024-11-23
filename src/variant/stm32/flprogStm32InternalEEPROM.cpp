@@ -48,22 +48,26 @@ void FLProgInternalEEPROM::begin()
     {
         return;
     }
-    if (EEPROM.read(0) == _data[0])
+    // if (EEPROM.read(0) == _data[0])
+    if (eeprom_read_byte(0) == _data[0])
     {
         for (uint16_t i = 1; i < _size; i++)
         {
-            _data[i] = EEPROM.read(i);
+            // _data[i] = EEPROM.read(i);
+            _data[i] = eeprom_buffered_read_byte(i);
             _dataChanged[i] = false;
         }
     }
     else
     {
-        EEPROM.write(0, _data[0]);
+        // EEPROM.write(0, _data[0]);
         for (uint16_t i = 0; i < _size; i++)
         {
-           // EEPROM.write(i, _data[i]);
+            eeprom_buffered_write_byte(i, _data[i]);
+            // EEPROM.write(i, _data[i]);
             _dataChanged[i] = true;
         }
+        eeprom_buffer_flush();
     }
 }
 
@@ -78,9 +82,16 @@ void FLProgInternalEEPROM::pool()
     uint16_t temp = nextUpdateByteAddress();
     if (temp == _size)
     {
+        if (_hasUpdatedBytes)
+        {
+            eeprom_buffer_flush();
+            _hasUpdatedBytes = false;
+        }
         return;
     }
-    EEPROM.write(temp, _data[temp]);
+    // EEPROM.write(temp, _data[temp]);
+    eeprom_buffered_write_byte(temp, _data[temp]);
+    _hasUpdatedBytes = true;
     _dataChanged[temp] = false;
 }
 #endif

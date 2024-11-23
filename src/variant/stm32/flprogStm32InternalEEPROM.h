@@ -13,5 +13,6 @@ public:
 
 protected:
     virtual bool checkAddres(uint16_t addres, uint16_t endAddres);
+    bool _hasUpdatedBytes = false;
 };
 #endif

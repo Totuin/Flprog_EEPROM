@@ -8,9 +8,14 @@ FLProgExternalEEPROM::FLProgExternalEEPROM(uint8_t bus, uint8_t addres, uint16_t
         RT_HW_Base.i2cSetParam(_device, addres, bus);
         _type = type;
         _data = new uint8_t[_size];
-        _data[0] = initByte;
         _dataChanged = new bool[_size];
+        for (uint16_t i = 0; i < _size; i++)
+        {
+            _data[i] = 0;
+            _dataChanged[i] = false;
+        }
     }
+    _data[0] = initByte;
 }
 
 void FLProgExternalEEPROM::begin()
@@ -31,7 +36,7 @@ void FLProgExternalEEPROM::begin()
         {
             // universalWriteByte(i, _data[i]);
             // delay(10);
-            _dataChanged[i] = false;
+            _dataChanged[i] = true;
         }
     }
     _writeTime = flprog::timeBack(10);

@@ -1,9 +1,9 @@
 #pragma once
 #include "Arduino.h"
 #include "../../flprogEEPROM.h"
-#include <EEPROM.h>
 
 #ifdef FLPROG_STM32_EEPROM
+#include <EEPROM.h>
 class FLProgInternalEEPROM : public FLProgAbstractEEPROM
 {
 public:

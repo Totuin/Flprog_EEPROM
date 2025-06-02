@@ -5,7 +5,7 @@ FLProgExternalEEPROM::FLProgExternalEEPROM(uint8_t bus, uint8_t addres, uint16_t
     _size = size;
     if (_size > 0)
     {
-        RT_HW_Base.i2cSetParam(_device, addres, bus);
+        RT_HW_Base.i2cSetParam(_device, addres, bus, 0);
         _type = type;
         _data = new uint8_t[_size];
         _dataChanged = new bool[_size];

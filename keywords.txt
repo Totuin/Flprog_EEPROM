@@ -1,0 +1,63 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+#######################################
+# # Datatypes (KEYWORD1)
+#######################################
+FLProgAbstractEEPROM	KEYWORD1
+FLProgExternalEEPROM	KEYWORD1
+FLProgInternalEEPROM	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+device	KEYWORD2
+getSkippingEvents	KEYWORD2
+pool	KEYWORD2
+readBoolean	KEYWORD2
+readByte	KEYWORD2
+readByteArray	KEYWORD2
+readFloat	KEYWORD2
+readInteger	KEYWORD2
+readLong	KEYWORD2
+readString	KEYWORD2
+readUint16Array	KEYWORD2
+readUint32Array	KEYWORD2
+readUnsignedLong	KEYWORD2
+saveBoolean	KEYWORD2
+saveByte	KEYWORD2
+saveByteArray	KEYWORD2
+saveFloat	KEYWORD2
+saveInteger	KEYWORD2
+saveLong	KEYWORD2
+saveString	KEYWORD2
+saveUint16Array	KEYWORD2
+saveUint32Array	KEYWORD2
+saveUnsignedLong	KEYWORD2
+setBooleanStartValue	KEYWORD2
+setByteArrayStartValue	KEYWORD2
+setByteStartValue	KEYWORD2
+setFloatStartValue	KEYWORD2
+setIntegerStartValue	KEYWORD2
+setLongStartValue	KEYWORD2
+setSkippingEvents	KEYWORD2
+setStringStartValue	KEYWORD2
+setUint16ArrayStartValue	KEYWORD2
+setUint32ArrayStartValue	KEYWORD2
+setUnsignedLongStartValue	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+ARDUINO_ARCH_ESP32	LITERAL1
+ARDUINO_ARCH_ESP8266	LITERAL1
+ARDUINO_ARCH_RP2040	LITERAL1
+ARDUINO_ARCH_STM32	LITERAL1
+FLPROG_24C0X_EXTERNAL_EEPROM	LITERAL1
+FLPROG_24C2X_EXTERNAL_EEPROM	LITERAL1
+FLPROG_AVR_EEPROM	LITERAL1
+FLPROG_EEPROM	LITERAL1
+FLPROG_ESP_EEPROM	LITERAL1
+FLPROG_RP2040_EEPROM	LITERAL1
+FLPROG_STM32_EEPROM	LITERAL1
